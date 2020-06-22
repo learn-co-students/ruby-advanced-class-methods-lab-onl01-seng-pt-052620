@@ -33,8 +33,27 @@ class Song
     @@all.find{|song| song.name == name}
   end
 
-  def self.find_or_create_by_name
-    
+  def self.find_or_create_by_name(name)
+    self.find_by_name(name) || self.create_by_name(name)
+  end
+
+  def self.alphabetical
+    self.all.sort_by! {|a| a.name }
+  end
+
+  def self.new_from_filename(filename)
+    artist_name, name = filename.delete_suffix('.mp3').split(' - ')
+    song = self.new_by_name(name)
+    song.artist_name = artist_name
+    song
+  end
+
+  def self.create_from_filename(filename)
+    self.new_from_filename(filename).save
+  end
+
+  def self.destory_all
+    self.all.clear
   end
 
 end
